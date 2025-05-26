@@ -17,6 +17,7 @@ public class ChatController {
 
 	private final ChatClient chatClient;
 
+
 	@Value("classpath:prompts/celeb-details.st")
 	private Resource celebPrompt;
 
@@ -30,5 +31,12 @@ public class ChatController {
 		return chatClient.prompt(message).call().chatResponse().getResult().getOutput().getText();
 	}
 
+	@GetMapping("/chatWithTemplate")
+	public String askWithTemplate(@RequestParam String name) {
+
+		PromptTemplate template = new PromptTemplate(celebPrompt);
+		Prompt prompt = template.create(Map.of("name", name));
+		return chatClient.prompt(prompt).call().chatResponse().getResult().getOutput().getText();
+	}
 
 }
